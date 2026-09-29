@@ -1,0 +1,67 @@
+{
+  "stage": "preprocessing_v1",
+  "forecast_horizon": "rolling one-week ahead",
+  "target": "UnitsSold",
+  "source_file": "data/Online Retail.xlsx",
+  "source_sha256": "43465a06f2ccf7c8b5bd2892bc7defb52f97487934fe93b16ae4c3936424676d",
+  "python": "3.14.6",
+  "packages": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "scipy": "1.18.0",
+    "scikit-learn": "1.9.0",
+    "matplotlib": "3.11.0",
+    "openpyxl": "3.1.5",
+    "joblib": "1.5.3"
+  },
+  "validation_start": "2011-08-29",
+  "test_start": "2011-10-17",
+  "minimum_prior_selling_weeks": 4,
+  "numeric_features": [
+    "UnitsLag1",
+    "UnitsLag2",
+    "UnitsLag4",
+    "RollingMean4",
+    "RollingStd4",
+    "ZeroWeeksLast4",
+    "WeeksSinceFirstSale",
+    "PriorSellingWeeks",
+    "LastObservedUnitPrice",
+    "WeekSin",
+    "WeekCos"
+  ],
+  "categorical_features": [
+    "StockCode",
+    "Month"
+  ],
+  "encoded_feature_count": 3107,
+  "splits": [
+    {
+      "split": "train",
+      "first_week": "2011-01-10",
+      "last_week": "2011-08-22",
+      "weeks": 33,
+      "rows": 83092,
+      "products": 3084
+    },
+    {
+      "split": "validation",
+      "first_week": "2011-08-29",
+      "last_week": "2011-10-10",
+      "weeks": 7,
+      "rows": 22191,
+      "products": 3239
+    },
+    {
+      "split": "test",
+      "first_week": "2011-10-17",
+      "last_week": "2011-11-28",
+      "weeks": 7,
+      "rows": 23511,
+      "products": 3434
+    }
+  ],
+  "checks_passed": 15,
+  "row_order": "WeekStart then StockCode within each split",
+  "panel_assumption": "all introduced products remain at risk through final complete week; no inventory status available"
+}

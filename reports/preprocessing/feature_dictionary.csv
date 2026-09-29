@@ -1,0 +1,10 @@
+feature,type,availability,processing
+UnitsLag1 / UnitsLag2 / UnitsLag4,Numeric,"Observed units 1, 2, 4 calendar weeks earlier",StandardScaler
+RollingMean4 / RollingStd4,Numeric,Demand summaries over the previous four weeks,StandardScaler
+ZeroWeeksLast4,Numeric count,Zero-sales weeks among the previous four,StandardScaler
+WeeksSinceFirstSale,Numeric count,Product age in weeks at forecast origin,StandardScaler
+PriorSellingWeeks,Numeric count,Positive-sales weeks strictly before forecast origin,StandardScaler
+LastObservedUnitPrice,Numeric,Last available historical weekly median price,StandardScaler
+WeekSin / WeekCos,Numeric,Known calendar of the forecast week,StandardScaler
+StockCode,Categorical,Product identity already observed in prior sales,One-hot; vocabulary learned on training rows
+Month,Categorical,Known forecast month,One-hot; fixed calendar domain 01–12

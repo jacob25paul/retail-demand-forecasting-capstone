@@ -1,0 +1,16 @@
+check,result
+Unique product-week key,PASS
+Disjoint split RowIDs,PASS
+One partition per calendar week,PASS
+Training precedes validation precedes test,PASS
+Target excluded from predictor columns,PASS
+Every forecast has four previous selling weeks,PASS
+Scaler fit sees only training rows,PASS
+Product vocabulary equals training products,PASS
+Finite matrices with matching schemas,PASS
+Targets and row keys align,PASS
+Sample lags and rolling statistics match prior calendar weeks,PASS
+All complete rolling standard deviations match direct calculation; constant windows equal zero,PASS
+Current/future outcome changes cannot alter earlier features,PASS
+Unseen product transforms without failure,PASS
+Unseen product has all-zero product indicator block,PASS

@@ -1,0 +1,4 @@
+split,first_week,last_week,weeks,rows,products
+train,2011-01-10,2011-08-22,33,83092,3084
+validation,2011-08-29,2011-10-10,7,22191,3239
+test,2011-10-17,2011-11-28,7,23511,3434

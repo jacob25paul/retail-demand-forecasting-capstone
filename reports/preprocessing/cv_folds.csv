@@ -1,0 +1,4 @@
+fold,train_first_week,train_last_week,validation_first_week,validation_last_week,train_rows,validation_rows
+1,2011-01-10,2011-05-30,2011-06-06,2011-06-27,47765,11255
+2,2011-01-10,2011-06-27,2011-07-04,2011-07-25,59020,11852
+3,2011-01-10,2011-07-25,2011-08-01,2011-08-22,70872,12220
