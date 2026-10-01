@@ -1,0 +1,6 @@
+step,removed_rows,remaining_rows
+Exclude cancellation/adjustment invoices,9291,532618
+Keep positive quantities,1336,531282
+Keep positive prices,1179,530103
+Remove exact duplicates,5226,524877
+Keep merchandise-code proxy: contains a digit,2192,522685

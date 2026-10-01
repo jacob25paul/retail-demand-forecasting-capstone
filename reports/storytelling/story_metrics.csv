@@ -1,0 +1,15 @@
+metric,value
+raw_rows,541909.0
+cleaned_rows,522685.0
+jan_nov_rows,457090.0
+jan_nov_units,4891273.0
+distinct_products,3815.0
+november_units,746974.0
+jan_jun_mean_monthly_units,355998.8333333333
+november_ratio,2.0982484493160793
+top_20pct_product_count,763.0
+top_20pct_unit_share,0.767175334519255
+january_cohort_products,2569.0
+followup_weeks,42.0
+median_zero_weeks,15.0
+uk_unit_share,0.8260802453676169
