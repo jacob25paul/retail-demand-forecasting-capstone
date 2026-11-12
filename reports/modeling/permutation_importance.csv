@@ -1,0 +1,13 @@
+Feature,MAE increase when shuffled,Std over repeats,Model
+RollingMean4,8.846607664351126,0.06572676852194231,Histogram gradient boosting
+UnitsLag1,5.542400256465124,0.077708386594891,Histogram gradient boosting
+UnitsLag2,2.2040266981751087,0.03425934254940454,Histogram gradient boosting
+UnitsLag4,1.2283986868426617,0.014432480484350894,Histogram gradient boosting
+ZeroWeeksLast4,1.1847577952313855,0.08576364844877399,Histogram gradient boosting
+LastObservedUnitPrice,0.13960468714004862,0.01570913009526777,Histogram gradient boosting
+RollingStd4,0.10409019451062348,0.007805536670623944,Histogram gradient boosting
+PriorSellingWeeks,0.07921323421356732,0.006122712481833436,Histogram gradient boosting
+WeeksSinceFirstSale,0.0359843531967627,0.0023270141275414436,Histogram gradient boosting
+WeekCos,0.0015213463423322082,0.0004337910043757949,Histogram gradient boosting
+WeekSin,0.0,0.0,Histogram gradient boosting
+Month,0.0,0.0,Histogram gradient boosting

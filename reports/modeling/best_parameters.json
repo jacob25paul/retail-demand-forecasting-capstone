@@ -1,0 +1,15 @@
+{
+  "Ridge regression": {
+    "alpha": 100
+  },
+  "Random forest": {
+    "max_features": 0.33,
+    "min_samples_leaf": 30
+  },
+  "Histogram gradient boosting": {
+    "learning_rate": 0.05,
+    "loss": "absolute_error",
+    "max_leaf_nodes": 31,
+    "min_samples_leaf": 20
+  }
+}

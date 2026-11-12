@@ -1,0 +1,60 @@
+{
+  "stage": "modeling_v1",
+  "selection_rule": "lowest validation MAE with rounded non-negative forecasts",
+  "selected_model": "Histogram gradient boosting",
+  "selected_parameters": {
+    "learning_rate": 0.05,
+    "loss": "absolute_error",
+    "max_leaf_nodes": 31,
+    "min_samples_leaf": 20
+  },
+  "selected_includes_product_dummies": false,
+  "ridge_includes_product_dummies": false,
+  "models_compared": [
+    "Ridge regression",
+    "Random forest",
+    "Histogram gradient boosting"
+  ],
+  "xgboost_in_run": false,
+  "random_state": 42,
+  "cv_folds": [
+    {
+      "fold": 1,
+      "train_first_week": "2011-01-10",
+      "train_last_week": "2011-05-30",
+      "validation_first_week": "2011-06-06",
+      "validation_last_week": "2011-06-27",
+      "train_rows": 47765,
+      "validation_rows": 11255
+    },
+    {
+      "fold": 2,
+      "train_first_week": "2011-01-10",
+      "train_last_week": "2011-06-27",
+      "validation_first_week": "2011-07-04",
+      "validation_last_week": "2011-07-25",
+      "train_rows": 59020,
+      "validation_rows": 11852
+    },
+    {
+      "fold": 3,
+      "train_first_week": "2011-01-10",
+      "train_last_week": "2011-07-25",
+      "validation_first_week": "2011-08-01",
+      "validation_last_week": "2011-08-22",
+      "train_rows": 70872,
+      "validation_rows": 12220
+    }
+  ],
+  "train_rows": 83092,
+  "validation_rows": 22191,
+  "test_rows": 23511,
+  "python": "3.14.6",
+  "packages": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "scipy": "1.18.0",
+    "scikit-learn": "1.9.0",
+    "matplotlib": "3.11.0"
+  }
+}
