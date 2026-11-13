@@ -1,116 +1,109 @@
 # Retail Demand Forecasting for Small Businesses
-### SmartBiz AI — Capstone Two | Springboard Data Science Bootcamp
+
+Springboard Data Science Career Track, Capstone Two
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.12-blue)](https://www.python.org/)
 [![Dataset](https://img.shields.io/badge/Dataset-UCI%20Online%20Retail-green)](https://archive.ics.uci.edu/dataset/352/online+retail)
 
----
+## Problem
 
-## Problem Statement
+A small retailer has to decide each week how much of every product to keep in stock. Too little means lost sales, too much ties up cash. This project forecasts **next week's units sold for each product** from the previous weeks' sales, and asks whether a tuned machine-learning model beats the simple rules a shop owner could apply in a spreadsheet.
 
-Small retail businesses make inventory decisions based on intuition rather than data. Overstocking ties up cash and creates waste; understocking results in lost sales and customer dissatisfaction. Large retailers like Amazon use sophisticated demand forecasting systems — but no affordable, accessible equivalent exists for small business owners.
+## Result in brief
 
-**SmartBiz AI** addresses this gap by building a supervised regression model that predicts weekly product demand for small retail businesses, enabling owners to make data-driven inventory decisions without any data science knowledge.
+The final model is a histogram gradient boosting regressor (absolute-error loss), chosen by lowest validation MAE and then refit on the training and validation weeks. It was scored once on seven held-out test weeks (17 Oct to 28 Nov 2011, 23,511 product-weeks).
 
----
+| Test metric | Gradient boosting | Four-week average | Last week | Product training average |
+|---|---:|---:|---:|---:|
+| Mean absolute error (units) | **27.66** | 28.97 | 33.00 | 35.48 |
+| RMSE (units) | 116.85 | **98.39** | 117.76 | 122.20 |
+| R² | 0.355 | **0.543** | 0.345 | 0.295 |
+| Within ±20% of actual | **37.1%** | 34.3% | 36.4% | 19.2% |
 
-## Project Overview
+- The model's typical error is 4.5% below the best simple baseline and 22% below the proposal's baseline (each product's training average).
+- Most of the gain comes from recognizing weeks with no sales: the model forecast exactly zero in 75.3% of zero-sales weeks, against 64.6% for the four-week average.
+- **Limitation:** the model under-forecasts the busiest products and weeks. Summed over all products, its weekly totals were 25% to 46% below actual sales in every test week. Its largest forecast for any product-week was 422 units, while 290 product-weeks sold more than 500. It does worse than the four-week average on RMSE and R², so it should not be used alone to set peak-season stock.
 
-| | |
+Full details are in the final report and the slides.
+
+## Deliverables
+
+| Item | File |
 |---|---|
-| **Type** | Supervised Regression |
-| **Model** | XGBoost Regressor |
-| **Dataset** | UCI Online Retail (541,909 transactions) |
-| **Target** | Weekly units sold per product |
-| **Evaluation** | MAE, RMSE, R² vs. naive baseline |
-| **Output** | Streamlit dashboard + final report |
+| Final report | [`reports/final_report.pdf`](reports/final_report.pdf) |
+| Final slides | [`slides/Capstone_Final_Slides.pdf`](slides/Capstone_Final_Slides.pdf) |
+| Model metrics | [`reports/modeling/model_metrics.csv`](reports/modeling/model_metrics.csv) |
+| Project proposal | [`proposal/retail-demand-forecasting-capstone-Proposal.pdf`](proposal/retail-demand-forecasting-capstone-Proposal.pdf) |
 
----
+## Data
 
-## Dataset
+UCI Online Retail data set (Chen, 2015), CC BY 4.0: invoice lines from a UK-based online retailer, December 2010 to December 2011.
 
-**UCI Online Retail Dataset**
-- 541,909 transactions from a UK-based retailer
-- Date range: December 2010 – December 2011
-- ~4,300 unique customers | ~3,700 unique products
-- Available at: [archive.ics.uci.edu](https://archive.ics.uci.edu/dataset/352/online+retail) or [Kaggle](https://www.kaggle.com/datasets/vijayuv/onlineretail)
-- License: Creative Commons Attribution 4.0 (CC BY 4.0)
+- 541,909 raw lines, 522,685 after cleaning (cancellations, non-product codes and invalid rows removed).
+- 3,815 distinct products in the story analysis; 3,434 products and 128,794 product-weeks in the modeling table.
+- The workbook is expected at `data/Online Retail.xlsx` (or `data/raw/Online Retail.xlsx`). It can be downloaded from the [UCI repository](https://archive.ics.uci.edu/dataset/352/online+retail).
 
-> **Note:** The dataset is not included in this repository due to its size. Download it from the links above and place it in the `data/raw/` folder before running any notebooks.
+## What the data story showed
 
----
+1. **Demand is seasonal.** November sold about 747,000 units, 2.1 times the January to June monthly average.
+2. **A fifth of the products carry the business.** The top 20% of products (763 of 3,815) account for 77% of units.
+3. **Most products sell in fits and starts.** The median established product had no sales in 15 of 42 follow-up weeks.
 
-## Approach
+These findings shaped the design: split by date, report error by volume group, and check how well zero-sales weeks are handled.
 
-### Step 1 — Data Wrangling & EDA
-- Remove cancelled transactions (Quantity < 0) and rows with missing CustomerID
-- Aggregate daily transactions into weekly sales per product (StockCode + week)
-- Explore sales trends by product, day of week, month, and seasonal patterns
+## Method
 
-### Step 2 — Feature Engineering
-- Lag features: units sold 1, 2, and 4 weeks prior
-- Rolling average: 4-week moving average of sales per product
-- Calendar features: day of week, month, quarter, UK public holiday flags
-- Exclude products with fewer than 4 weeks of sales history
+- **Target:** units of one product in the coming Monday to Sunday week, forecast from information available through the prior Sunday (rolling one-week-ahead).
+- **Splits by week:** train 10 Jan to 22 Aug 2011 (33 weeks, 83,092 rows); validation 29 Aug to 10 Oct (7 weeks, 22,191 rows); test 17 Oct to 28 Nov (7 weeks, 23,511 rows).
+- **Predictors:** recent weekly sales, rolling summaries, product history and calendar features. Revenue and current-week information are excluded. See `reports/preprocessing/feature_dictionary.csv`.
+- **Models:** Ridge regression, random forest and histogram gradient boosting, tuned with grid search over three expanding-window cross-validation folds (scored by MAE). XGBoost is an optional candidate that the notebook adds automatically when installed; it was not available in the reported run.
+- **Baselines:** per-product training average, last week, four-week rolling mean.
+- **Selection rule** (set in advance): lowest validation MAE. The chosen model is refit on training plus validation weeks and scored once on the test weeks.
+- Forecasts are rounded to non-negative whole units before scoring.
 
-### Step 3 — Modeling
-- Model: XGBoost Regressor (single well-tuned model)
-- Split: time-based train/validation/test split (no random shuffle)
-- Tuning: GridSearchCV with TimeSeriesSplit
-- Post-processing: predictions rounded to nearest non-negative integer
-
-### Step 4 — Evaluation
-- MAE, RMSE, and R² against a naive baseline (per-product average weekly sales)
-- Business framing: % of forecasts within ±20% of actual weekly sales per product
-
-### Step 5 — Output
-- Streamlit dashboard showing actual vs. predicted weekly demand per product
-- Final report submitted as PDF to this repository
-
----
-
-## Repository Structure
+## Repository structure
 
 ```
 retail-demand-forecasting-capstone/
-│
-├── proposal/
-│   └── SmartBizAI_Capstone2_Proposal.pdf   ← Project proposal (start here)
-│
+├── proposal/                      Project proposal
 ├── data/
-│   └── raw/                                ← Place UCI dataset here (not tracked)
-│
+│   ├── Online Retail.xlsx         Source workbook
+│   └── processed/preprocessing_v1 Weekly training tables
 ├── notebooks/
-│   ├── 01_data_wrangling.ipynb
-│   ├── 02_eda.ipynb
-│   ├── 03_feature_engineering.ipynb
-│   └── 04_modeling.ipynb
-│
-├── dashboard/
-│   └── app.py                              ← Streamlit dashboard (coming soon)
-│
+│   ├── 02_exploratory_data_analysis.ipynb
+│   ├── 03_preprocessing_and_training_data.ipynb
+│   ├── 04_data_storytelling.ipynb
+│   └── 05_modeling.ipynb
 ├── reports/
-│   └── final_report.pdf                    ← Final report (coming soon)
-│
-├── .gitignore
-├── LICENSE
-└── README.md
+│   ├── final_report.pdf
+│   ├── preprocessing/             Cleaning audit, splits, feature dictionary
+│   ├── storytelling/              Charts and summary numbers
+│   └── modeling/                  Metrics, tuning, predictions, figures
+├── slides/
+│   └── Capstone_Final_Slides.pdf
+├── PREPROCESSING.md               Details of the training-data pipeline
+├── requirements-preprocessing.txt
+└── LICENSE
 ```
 
-> Notebooks and dashboard will be added as the project progresses.
+## Reproduce
 
----
+Use Python 3.12.
 
-## About SmartBiz AI
+```bash
+python -m pip install -r requirements-preprocessing.txt
+jupyter lab
+```
 
-SmartBiz AI is a machine learning platform built specifically for small businesses. It translates raw transaction data into plain-English predictions — no data science background needed.
+Run the notebooks in order (02, 03, 04, 05) with Restart Kernel and Run All. Notebook 05 reads the tables written by notebook 03 and writes its outputs to `reports/modeling/`. Random seeds are fixed. `reports/modeling/run_manifest.json` records the library versions used for the reported results.
 
-This capstone focuses on the **Retail Intelligence Module**: predicting weekly product demand using the UCI Online Retail dataset. Future modules planned include restaurant staffing prediction, customer churn detection, and peak period forecasting.
+## Next steps
 
----
+Compare XGBoost, test a selection rule or target that reduces the under-forecast of busy weeks, add holiday flags and a second year of data so the model can learn the autumn peak, and build the Streamlit dashboard described in the proposal.
 
 ## Author
 
-**Jacob Paul**
-[LinkedIn](https://www.linkedin.com/in/jacob25paul) · [GitHub](https://github.com/jacob25paul)
+**Jacob Paul**: [LinkedIn](https://www.linkedin.com/in/jacob25paul) · [GitHub](https://github.com/jacob25paul)
+
+Data: Chen, D. (2015). Online Retail. UCI Machine Learning Repository. https://doi.org/10.24432/C5BW33
